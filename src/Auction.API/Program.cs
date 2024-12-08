@@ -1,6 +1,11 @@
+using DotnetAuction.API.Contracts;
 using DotnetAuction.API.Filters;
+using DotnetAuction.API.Repositories;
+using DotnetAuction.API.Repositories.DataAccess;
 using DotnetAuction.API.Services;
+using DotnetAuction.API.UseCases.Auctions.GetCurrent;
 using DotnetAuction.API.UseCases.Offers.CreateOffer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +48,15 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<AuthenticationUserAttribute>();
 builder.Services.AddScoped<LoggedUser>();
 builder.Services.AddScoped<CreateOfferUseCase>();
+builder.Services.AddScoped<GetCurrentAuctionUseCase>();
+builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
+builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddDbContext<DotnetAuctionDbContext>(options =>
+{
+    options.UseSqlite("Data Source=L:\\Workspace\\AuctionAPI\\AuctionDB.db");
+});
 
 builder.Services.AddHttpContextAccessor();
 
